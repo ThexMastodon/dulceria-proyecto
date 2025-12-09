@@ -2,59 +2,15 @@
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-
 import { useCart } from "../../Context/CartContext";
 import { CartSheet } from "../../components/CartSheet";
-
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Search, X, Star, Minus, Plus, AlertCircle, CheckCircle,
-  Candy, Menu, Cookie, PartyPopper, Filter, LayoutGrid, Package, ShoppingBag
-} from 'lucide-react';
-
-function FloatingCandies() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-      <motion.div animate={{ y: [0, -20, 0], rotate: [0, 10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }} className="absolute top-20 left-[10%] text-pink-200 opacity-60"><Candy size={64} /></motion.div>
-      <motion.div animate={{ y: [0, 20, 0], rotate: [0, -15, 0] }} transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }} className="absolute bottom-20 left-[15%] text-orange-200 opacity-60"><Cookie size={56} /></motion.div>
-      <div className="absolute top-1/2 right-[20%] text-yellow-200 opacity-40"><PartyPopper size={40} /></div>
-    </div>
-  );
-}
-
-function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navLinks = [
-    { name: "Inicio", href: "/" },
-    { name: "Tienda", href: "/tienda" },
-    { name: "Promociones", href: "/promociones" },
-    { name: "Nosotros", href: "/nosotros" },
-    { name: "Marcas", href: "/marcas" },
-  ];
-  return (
-    <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-zinc-100">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2 cursor-pointer">
-          <div className="w-8 h-8 bg-pink-600 rounded-lg flex items-center justify-center text-white"><Candy size={20} /></div>
-          <span className="font-bold text-xl tracking-tight text-zinc-900 hidden sm:block">Sugar OS</span>
-        </a>
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <a key={link.name} href={link.href} className="text-sm font-medium text-zinc-500 hover:text-pink-600 transition-colors">{link.name}</a>
-          ))}
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="text-zinc-500 hover:text-pink-600"><Search size={20} /></Button>
-          <CartSheet />
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}><Menu size={20} /></Button>
-        </div>
-      </div>
-      {isMenuOpen && <div className="md:hidden absolute top-16 left-0 w-full bg-white border-b p-4 flex flex-col gap-4 shadow-xl">{navLinks.map(l => <a key={l.name} href={l.href} className="text-lg font-medium">{l.name}</a>)}</div>}
-    </nav>
-  );
-}
+import { Search, X, Star, Minus, Plus, AlertCircle, CheckCircle, Filter, LayoutGrid, ShoppingBag } from 'lucide-react';
+import { Navbar } from '@/components/Navbar';
+import { FloatingCandies } from '@/components/FloatingCandies';
+import { Footer } from '@/components/Footer';
 
 interface Product {
   id: number;
@@ -271,17 +227,15 @@ export default function ShopPage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 font-sans text-zinc-900 relative">
-      <FloatingCandies />
       <Navbar />
 
       <main className="max-w-7xl mx-auto px-6 py-12 relative z-10">
-
         <div className="text-center mb-8">
+          <FloatingCandies />
           <h1 className="text-4xl font-black mb-2">La Tienda</h1>
           <p className="text-zinc-500">Encuentra exactamente lo que se te antoja.</p>
         </div>
 
-        {/* PANEL DE FILTROS */}
         <div className="bg-white p-6 rounded-[2.5rem] shadow-sm border border-zinc-100 mb-8 transition-all">
           <div className="flex flex-col md:flex-row gap-4 mb-6">
             <div className="relative flex-1">
@@ -298,7 +252,6 @@ export default function ShopPage() {
               <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden space-y-6">
                 <div className="h-px bg-zinc-100 w-full" />
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                  {/* Filtros... */}
                   <div className="space-y-6">
                     <div>
                       <h3 className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-3">Precio Máximo: ${maxPrice}</h3>
@@ -348,7 +301,6 @@ export default function ShopPage() {
           </AnimatePresence>
         </div>
 
-        {/* SECCIÓN 1: Resultados Filtrados O Tendencias */}
         <div className="mb-6 flex items-center gap-2">
           <Star className={`fill-current ${isFiltering ? 'text-zinc-300' : 'text-yellow-500'}`} />
           <h2 className="text-xl font-bold">
@@ -373,7 +325,6 @@ export default function ShopPage() {
           </AnimatePresence>
         </div>
 
-        {/* SECCIÓN 2: CATÁLOGO COMPLETO */}
         {!isFiltering && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
             <div className="mb-6 flex items-center gap-2 pt-8 border-t border-zinc-200">
@@ -389,10 +340,9 @@ export default function ShopPage() {
           </motion.div>
         )}
 
-        {/* MODAL DETALLE */}
         <AnimatePresence>
           {selectedProduct && (
-            <div className="fixed inset-0 z-60flex items-center justify-center p-4">
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedProduct(null)} className="absolute inset-0 bg-zinc-900/40 backdrop-blur-sm" />
 
               <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.9, opacity: 0, y: 20 }} className="bg-white w-full max-w-lg rounded-[2.5rem] overflow-hidden shadow-2xl relative z-10">
@@ -416,7 +366,6 @@ export default function ShopPage() {
                       <p className="text-pink-600 font-bold">{selectedProduct.brand}</p>
                     </div>
                     <div className="text-right">
-                      {/* Precio Dinámico según Modo */}
                       <span className="block text-3xl font-black">${getCurrentPrice()}</span>
                       <span className={`text-xs font-bold ${selectedProduct.stock > 0 ? 'text-green-600' : 'text-red-500'}`}>{selectedProduct.stock > 0 ? `${selectedProduct.stock} Disponibles` : 'Sin Stock'}</span>
                     </div>
@@ -426,7 +375,6 @@ export default function ShopPage() {
 
                   {selectedProduct.stock > 0 ? (
                     <div className="mb-6">
-                      {/* Selector de Modo: Pieza / Caja */}
                       {selectedProduct.unitsPerBox > 1 && (
                         <div className="flex bg-zinc-100 p-1 rounded-xl mb-6">
                           <button
@@ -450,7 +398,6 @@ export default function ShopPage() {
                         </span>
                         <div className="flex items-center gap-4">
                           <button onClick={() => handleQuantityChange(-1)} className="w-8 h-8 rounded-full bg-white border border-zinc-200 flex items-center justify-center hover:bg-zinc-100 disabled:opacity-50" disabled={quantity <= 1}><Minus size={14} /></button>
-                          {/* Input Manual */}
                           <input
                             type="number"
                             value={manualQty}
@@ -477,6 +424,8 @@ export default function ShopPage() {
           )}
         </AnimatePresence>
       </main>
+
+      <Footer />
     </div>
   );
 }

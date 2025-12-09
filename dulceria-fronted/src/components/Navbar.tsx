@@ -1,15 +1,15 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Search, Menu, X, Candy} from 'lucide-react';
+import { Search, Menu, X, Candy, LogOut} from 'lucide-react';
 import { Button } from './ui/button';
 import Link from 'next/link';
 import { CartSheet } from './CartSheet';
+import { useAuth } from '@/Context/AuthContext';
 
 export function Navbar() {
   const [ isMenuOpen, setIsMenuOpen ] = useState(false);
-
-  const [ user, setUser ] = useState<{name: string} | null>(null);
+  const { user, logout } = useAuth();
 
   const navLinks = [
     { name: "Inicio", href: "/" },
@@ -56,10 +56,15 @@ export function Navbar() {
             <div className='hidden md:flex items-center gap-2 pl-2'>
               <div className='text-right hidden lg:block'>
                 <p className='text-xs font-bold text-zinc-900'>Hola, {user.name}</p>
-                <p className='text-[10px] text-pink-600 font-medium cursor-pointer hover:underline'>Mi cuenta</p>
+                <p 
+                  className='text-[10px] text-pink-600 font-medium cursor-pointer hover:underline'
+                  onClick={logout}
+                >
+                  <LogOut size={12} className='inline-block mr-1' />
+                </p>
               </div>
               <div className='w-8 h-8 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center font-bold text-xs border border-pink-200'>
-                {user.name.charAt(0)}
+                {user.name.charAt(0).toUpperCase()}
               </div>
             </div>
           ) : (
@@ -95,9 +100,26 @@ export function Navbar() {
               {link.name}
             </Link>
           ))}
-          <Button className='w-full bg-pink-600 hover:bg-pink-700 mt-2'>
-            {user ? `Hola, ${user.name}` : 'Iniciar Sesión'}
-          </Button>
+          {user ? (
+            <div className='space-y-2 mt-2'>
+              <div className='p-3 bg-pink-50 rounded-xl text-center'>
+                <p className='font-bold text-zinc-900'>Hola, {user.name}</p>
+                <p className='text-xs text-zinc-500'>{user.email}</p>
+              </div>
+              <Button 
+                className='w-full bg-pink-600 hover:bg-pink-700'
+                onClick={logout}
+              >
+                <LogOut size={18} className='mr-2' />
+              </Button>
+            </div>
+          ) : (
+            <Link href="/login" className='w-full'>
+              <Button className='w-full bg-pink-600 hover:bg-pink-700 mt-2'>
+                Iniciar Sesión
+              </Button>
+            </Link>
+          )}
         </div>
       )}
     </nav>

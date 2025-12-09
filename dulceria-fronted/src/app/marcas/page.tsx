@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Navbar } from '@/components/Navbar';
-import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { X, Star, ArrowRight, Sparkles, Candy, Search, ShoppingBag, Menu } from 'lucide-react';
+import { X, Star, ArrowRight, Sparkles } from 'lucide-react';
 import { FloatingCandies } from '@/components/FloatingCandies';
+import { Footer } from '@/components/Footer';
 
 interface Product {
   id: number;
@@ -269,6 +269,8 @@ export default function BrandsPage() {
           </>
         )}
       </AnimatePresence>
+
+      <Footer />
     </div>
   );
 }

@@ -45,7 +45,7 @@ export default function RegisterPage() {
             <div className="relative">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" size={20} />
               <Input
-                placeholder="Nombre Completo"
+                placeholder="Nombre completo"
                 className="pl-12 h-12 rounded-xl bg-zinc-50 border-zinc-200 focus:border-pink-500"
                 required
               />
@@ -89,7 +89,7 @@ export default function RegisterPage() {
               {isLoading ? (
                 <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creando cuenta...</>
               ) : (
-                "Crear Cuenta"
+                "Crear cuenta"
               )}
             </Button>
           </form>

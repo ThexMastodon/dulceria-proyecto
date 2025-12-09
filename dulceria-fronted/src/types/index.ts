@@ -1,10 +1,14 @@
-export type Role = 'client' | 'admin' | 'manager' | 'cashier' | 'delivery' | 'promoter';
+export type Role = 'client' | 'admin' | 'almacen' | 'cashier' | 'delivery' | 'promoter' | 'RH' | 'manager';
 
 export interface User {
   id: string;
   name: string;
-  role: Role;
+  lastName?: string;
+  secondLastName?: string;
+  role: Role | string;
+  email: string;
   avatar?: string;
+  active?: boolean;
 }
 
 export interface Product {

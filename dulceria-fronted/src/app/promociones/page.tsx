@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tag, Copy, CheckCircle, Timer, Gift, Sparkles, Candy} from 'lucide-react';
+import { Footer } from '@/components/Footer';
 
 const PROMOTIONS = [
   {
@@ -198,6 +199,7 @@ export default function PromotionsPage() {
             </div>
           </div>
       </section>
+      <Footer />
     </div>
   );
 }

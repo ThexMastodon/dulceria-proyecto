@@ -4,20 +4,32 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Candy, Mail, Lock, ArrowRight, Loader2, Cookie, PartyPopper } from 'lucide-react';
+import { Candy, Mail, Lock, ArrowRight, Loader2, AlertCircle } from 'lucide-react';
 import { FloatingCandies } from '@/components/FloatingCandies';
 import { motion } from 'framer-motion';
+import { useAuth } from '@/Context/AuthContext';
+import { authenticateUser } from '@/lib/auth';
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const { login } = useAuth();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
 
-    setTimeout(() => {
+    try {
+      const user = await authenticateUser(email, password);
+      login(user);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error al iniciar sesión');
+    } finally {
       setIsLoading(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -40,12 +52,21 @@ export default function LoginPage() {
           </div>
 
           <form onSubmit={handleLogin} className='space-y-4'>
+            {error && (
+              <div className='flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-sm'>
+                <AlertCircle size={18} />
+                <span>{error}</span>
+              </div>
+            )}
+
             <div className='space-y-2'>
               <div className='relative'>
                 <Mail size={20} className='absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400' />
                 <Input
                   type="email"
                   placeholder="ejemplo@correo.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="pl-12 h-12 rounded-xl bg-zinc-50 border-zinc-200 focus:border-pink-500 transition-all"
                   required
                 />
@@ -58,6 +79,8 @@ export default function LoginPage() {
                 <Input
                   type="password"
                   placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="pl-12 h-12 rounded-xl bg-zinc-50 border-zinc-200 focus:border-pink-500 transition-all"
                   required
                 />
