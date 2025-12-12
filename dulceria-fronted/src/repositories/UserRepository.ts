@@ -8,18 +8,19 @@ interface UserData {
   secondLastName: string;
   email: string;
   role: string;
+  image?: string;
   active: boolean;
 }
 
 const INITIAL_USERS: UserData[] = [
-  { id: '1', name: 'Juan', lastName: 'Perez', secondLastName: 'Gomez', email: 'juan.perez@gmail.com', role: 'admin', active: true },
-  { id: '2', name: 'Ana', lastName: 'García', secondLastName: 'López', email: 'ana.garcia@dulceria.com', role: 'Administrador', active: true },
-  { id: '3', name: 'Carlos', lastName: 'Ruiz', secondLastName: 'Pérez', email: 'carlos.ruiz@dulceria.com', role: 'Vendedor', active: true },
-  { id: '4', name: 'Luisa', lastName: 'Méndez', secondLastName: 'Sánchez', email: 'luisa.mendez@dulceria.com', role: 'Almacenista', active: false },
+  { id: '1', name: 'Juan', lastName: 'Perez', secondLastName: 'Gomez', email: 'juan.perez@gmail.com', role: 'admin', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400', active: true },
+  { id: '2', name: 'Ana', lastName: 'García', secondLastName: 'López', email: 'ana.garcia@dulceria.com', role: 'Administrador', image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400', active: true },
+  { id: '3', name: 'Carlos', lastName: 'Ruiz', secondLastName: 'Pérez', email: 'carlos.ruiz@dulceria.com', role: 'Vendedor', image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400', active: true },
+  { id: '4', name: 'Luisa', lastName: 'Méndez', secondLastName: 'Sánchez', email: 'luisa.mendez@dulceria.com', role: 'Almacenista', image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400', active: false },
   { id: '5', name: 'Jorge', lastName: 'Ramírez', secondLastName: 'Díaz', email: 'jorge.ramirez@dulceria.com', role: 'Vendedor', active: true },
-  { id: '6', name: 'María', lastName: 'Torres', secondLastName: 'Vargas', email: 'maria.torres@dulceria.com', role: 'Repartidor', active: true },
+  { id: '6', name: 'María', lastName: 'Torres', secondLastName: 'Vargas', email: 'maria.torres@dulceria.com', role: 'Repartidor', image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400', active: true },
   { id: '7', name: 'Pedro', lastName: 'Infante', secondLastName: 'Cruz', email: 'pedro.infante@dulceria.com', role: 'Vendedor', active: false },
-  { id: '8', name: 'Sofia', lastName: 'Vergara', secondLastName: 'Rojas', email: 'sofia.vergara@dulceria.com', role: 'Gerente', active: true },
+  { id: '8', name: 'Sofia', lastName: 'Vergara', secondLastName: 'Rojas', email: 'sofia.vergara@dulceria.com', role: 'Gerente', image: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400', active: true },
 ];
 
 export class UserRepository implements IUserRepository {

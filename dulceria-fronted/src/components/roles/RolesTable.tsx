@@ -65,14 +65,14 @@ export function RolesTable({ roles, onEdit, onDelete }: RolesTableProps) {
                 <div className="flex items-center justify-end gap-2">
                   <button
                     onClick={() => onEdit(role)}
-                    className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                    className="p-2 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition-colors"
                     title="Editar"
                   >
                     <Pencil size={16} />
                   </button>
                   <button
                     onClick={() => onDelete(role)}
-                    className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                     title="Eliminar"
                   >
                     <Trash2 size={16} />

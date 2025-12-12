@@ -8,6 +8,7 @@ export interface User {
   role: Role | string;
   email: string;
   avatar?: string;
+  image?: string;
   active?: boolean;
 }
 

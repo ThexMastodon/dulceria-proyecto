@@ -82,18 +82,29 @@ export function RolesView() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-zinc-900">Roles</h1>
+          <p className="text-zinc-500 mt-1">
+            Gestiona los roles y permisos del sistema
+          </p>
+        </div>
+      </div>
+
       <RolesToolbar
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         onCreateClick={handleOpenCreate}
       />
 
-      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
-        <RolesTable
-          roles={paginatedItems}
-          onEdit={handleOpenEdit}
-          onDelete={handleDeleteClick}
-        />
+      <div className="bg-white rounded-xl border border-zinc-200 shadow-sm">
+        <div className="overflow-x-auto">
+          <RolesTable
+            roles={paginatedItems}
+            onEdit={handleOpenEdit}
+            onDelete={handleDeleteClick}
+          />
+        </div>
 
         <Pagination
           currentPage={currentPage}

@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect } from 'react';
-import { X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { X, Shield } from 'lucide-react';
 import { Role } from '@/interfaces/IRoleRepository';
 import { usePermissions } from '@/hooks/usePermissions';
 import { permissionRepository } from '@/repositories/PermissionRepository';
+import { cn } from '@/lib/utils';
 
 interface RoleFormModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ interface RoleFormModalProps {
 
 export function RoleFormModal({ isOpen, role, formData, onClose, onSave, onChange }: RoleFormModalProps) {
   const { modules, loading } = usePermissions(permissionRepository);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     // Ensure permissions array exists
@@ -66,42 +68,71 @@ export function RoleFormModal({ isOpen, role, formData, onClose, onSave, onChang
     return checkedCount > 0 && checkedCount < modulePermissions.length;
   };
 
+  const validate = () => {
+    const e: Record<string, string> = {};
+    if (!formData.name?.trim()) e.name = 'Este campo es requerido';
+    if (!formData.description?.trim()) e.description = 'Este campo es requerido';
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (validate()) onSave(e);
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
-        <div className="px-6 py-4 border-b border-zinc-100 flex justify-between items-center bg-zinc-50/50">
-          <h3 className="text-lg font-bold text-zinc-900">
-            {role ? 'Editar rol' : 'Crear nuevo rol'}
-          </h3>
-          <button onClick={onClose} className="text-zinc-400 hover:text-zinc-600">
+        <div className="px-6 py-4 border-b border-zinc-200 flex items-center justify-between bg-white">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-50 to-pink-50 flex items-center justify-center">
+              <Shield className="text-purple-600" size={20} />
+            </div>
+            <h2 className="text-xl font-bold text-zinc-900">
+              {role ? 'Editar Rol' : 'Nuevo Rol'}
+            </h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-2 hover:bg-zinc-100 rounded-lg transition-colors"
+          >
             <X size={20} />
           </button>
         </div>
 
-        <form onSubmit={onSave} className="flex flex-col h-full">
+        <form onSubmit={handleSubmit} className="flex flex-col h-full">
           <div className="p-6 space-y-4 overflow-y-auto flex-1">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-zinc-500 uppercase">Nombre del rol</label>
+            <div className="flex items-center gap-2 mb-2">
+              <label className="text-xs font-semibold text-zinc-500 uppercase">Nombre del rol</label>
+              <span className="px-1.5 py-0.5 bg-pink-50 text-pink-600 text-[10px] font-semibold rounded">REQUERIDO</span>
+            </div>
             <input
               type="text"
               required
               value={formData.name || ''}
-              onChange={e => onChange({ ...formData, name: e.target.value })}
-              className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-100 transition-all"
+              onChange={e => { onChange({ ...formData, name: e.target.value }); if (errors.name) setErrors({ ...errors, name: '' }); }}
+              className={cn('w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-100 transition-all', errors.name ? 'border-red-300 bg-red-50' : 'border-zinc-200')}
               placeholder="ej. Supervisor de Ventas"
             />
+            {errors.name && <p className="text-xs text-red-600 mt-1">{errors.name}</p>}
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-zinc-500 uppercase">Descripción</label>
+            <div className="flex items-center gap-2 mb-2">
+              <label className="text-xs font-semibold text-zinc-500 uppercase">Descripción</label>
+              <span className="px-1.5 py-0.5 bg-pink-50 text-pink-600 text-[10px] font-semibold rounded">REQUERIDO</span>
+            </div>
             <textarea
               required
               rows={3}
               value={formData.description || ''}
-              onChange={e => onChange({ ...formData, description: e.target.value })}
-              className="w-full px-3 py-2 bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-100 transition-all resize-none"
+              onChange={e => { onChange({ ...formData, description: e.target.value }); if (errors.description) setErrors({ ...errors, description: '' }); }}
+              className={cn('w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-100 transition-all resize-none', errors.description ? 'border-red-300 bg-red-50' : 'border-zinc-200')}
               placeholder="Describe las responsabilidades de este rol..."
             />
+            {errors.description && <p className="text-xs text-red-600 mt-1">{errors.description}</p>}
           </div>
 
           <div className="space-y-1.5">
@@ -210,19 +241,19 @@ export function RoleFormModal({ isOpen, role, formData, onClose, onSave, onChang
           </div>
           </div>
 
-          <div className="px-6 py-4 flex justify-end gap-3 border-t border-zinc-100 bg-white">
+          <div className="px-6 py-4 flex gap-3 border-t border-zinc-100 bg-white">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-zinc-600 hover:bg-zinc-100 rounded-lg font-medium transition-colors"
+              className="flex-1 px-4 py-2 border border-zinc-200 text-zinc-700 rounded-lg hover:bg-zinc-50 transition-colors font-medium"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white rounded-lg font-medium shadow-lg shadow-pink-200 transition-colors whitespace-nowrap"
+              className="flex-1 px-4 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-colors font-medium shadow-lg shadow-zinc-200"
             >
-              Guardar cambios
+              {role ? 'Guardar Cambios' : 'Crear Rol'}
             </button>
           </div>
         </form>

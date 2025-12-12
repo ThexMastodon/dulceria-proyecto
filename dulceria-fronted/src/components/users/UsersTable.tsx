@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Pencil, Trash2, CheckCircle, XCircle } from 'lucide-react';
+import { Pencil, Trash2, CheckCircle, XCircle, User as UserIcon } from 'lucide-react';
 import { User } from '@/types';
 
 interface UsersTableProps {
@@ -35,13 +35,26 @@ export function UsersTable({ users, onEdit, onDelete }: UsersTableProps) {
           {users.map((user) => (
             <tr key={user.id} className="hover:bg-zinc-50/50 transition-colors">
               <td className="px-6 py-4">
-                <div className="flex flex-col">
-                  <span className="font-medium text-zinc-900">
-                    {user.name} {user.lastName}
-                  </span>
-                  {user.secondLastName && (
-                    <span className="text-xs text-zinc-400">{user.secondLastName}</span>
+                <div className="flex items-center gap-3">
+                  {user.image ? (
+                    <img
+                      src={user.image}
+                      alt={user.name}
+                      className="w-10 h-10 rounded-full object-cover flex-shrink-0 border border-zinc-200"
+                    />
+                  ) : (
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center flex-shrink-0">
+                      <UserIcon className="text-blue-600" size={20} />
+                    </div>
                   )}
+                  <div className="flex flex-col">
+                    <span className="font-medium text-zinc-900">
+                      {user.name} {user.lastName}
+                    </span>
+                    {user.secondLastName && (
+                      <span className="text-xs text-zinc-400">{user.secondLastName}</span>
+                    )}
+                  </div>
                 </div>
               </td>
               <td className="px-6 py-4 text-zinc-600">{user.email}</td>
@@ -65,14 +78,14 @@ export function UsersTable({ users, onEdit, onDelete }: UsersTableProps) {
                 <div className="flex items-center justify-end gap-2">
                   <button
                     onClick={() => onEdit(user)}
-                    className="p-2 text-zinc-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                    className="p-2 text-amber-600 hover:text-amber-700 hover:bg-amber-50 rounded-lg transition-colors"
                     title="Editar"
                   >
                     <Pencil size={16} />
                   </button>
                   <button
                     onClick={() => onDelete(user)}
-                    className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                    className="p-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
                     title="Eliminar"
                   >
                     <Trash2 size={16} />

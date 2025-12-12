@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { LayoutDashboard, Users, Settings, LogOut, Package, Candy,ChevronDown, Warehouse, Megaphone, ArrowUpDown, Monitor, Map, UserCog, Shield, Truck, Box, Building2, PackageSearch, ClipboardList, ArrowRightLeft, Tags, UserCircle, Route } from 'lucide-react';
+import { LayoutDashboard, Users, Settings, LogOut, Package, Candy,ChevronDown, Warehouse, Megaphone, ArrowUpDown, Monitor, Map, UserCog, Shield, Truck, Box, Building2, PackageSearch, ClipboardList, ArrowRightLeft, Tags, UserCircle, Route, ShoppingCart, Navigation } from 'lucide-react';
 
 export type MenuItem = {
   id: string;
@@ -35,6 +35,7 @@ export const MENU_ITEMS: MenuItem[] = [
       { id: 'productos', label: 'Productos', icon: Box },
       { id: 'sucursales', label: 'Sucursales', icon: Building2 },
       { id: 'almacenes', label: 'Almacenes', icon: Warehouse },
+      { id: 'clientes', label: 'Clientes', icon: Users },
     ]
   },
   { 
@@ -42,7 +43,9 @@ export const MENU_ITEMS: MenuItem[] = [
     label: 'Almacén', 
     icon: Warehouse,
     subItems: [
-      { id: 'pedidos-almacen', label: 'Pedidos', icon: ClipboardList },
+      { id: 'pedidos-almacen', label: 'Pedidos Almacén', icon: ClipboardList },
+      { id: 'pedidos-online', label: 'Pedidos en Línea', icon: ShoppingCart },
+      { id: 'pedidos-ruta', label: 'Pedidos de Ruta', icon: Navigation },
       { id: 'inventario', label: 'Inventario', icon: PackageSearch },
       { id: 'movimientos', label: 'Movimientos (E/S)', icon: ArrowRightLeft },
     ]
@@ -57,12 +60,12 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   { 
     id: 'movimiento-cajas', 
-    label: 'Movimiento Cajas', 
+    label: 'Movimiento cajas', 
     icon: ArrowUpDown 
   },
   { 
     id: 'caja', 
-    label: 'Caja (POS)', 
+    label: 'Caja', 
     icon: Monitor 
   },
   { 
@@ -82,9 +85,10 @@ interface SidebarProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   onLogout?: () => void;
+  allowedTabs?: string[];
 }
 
-export function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen, onLogout }: SidebarProps) {
+export function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen, onLogout, allowedTabs }: SidebarProps) {
   const [openSections, setOpenSections] = useState<string[]>([]);
 
   const toggleSection = (sectionId: string) => {
@@ -115,6 +119,12 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen, onLogout }
             const isSectionOpen = openSections.includes(item.id);
             const isActiveParent = activeTab === item.id || item.subItems?.some(sub => sub.id === activeTab);
 
+            // Hide parent items with subItems if none of their subItems are allowed
+            const visibleSubItems = item.subItems?.filter(sub => !allowedTabs || allowedTabs.includes(sub.id)) ?? [];
+            if (hasSubItems && visibleSubItems.length === 0) {
+              return null;
+            }
+
             return (
               <div key={item.id} className="mb-1">
                 <button
@@ -143,7 +153,7 @@ export function Sidebar({ activeTab, setActiveTab, isOpen, setIsOpen, onLogout }
 
                 {hasSubItems && isSectionOpen && (
                   <div className="mt-1 ml-4 pl-3 border-l border-zinc-100 space-y-0.5 animate-in slide-in-from-top-2 duration-200">
-                    {item.subItems!.map((sub) => (
+                    {visibleSubItems.map((sub) => (
                       <button
                         key={sub.id}
                         onClick={() => {
